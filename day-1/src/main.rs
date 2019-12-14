@@ -7,18 +7,22 @@ fn main() {
     let reader = read_file("data/modules-mass.txt");
     let mut total = 0;
     for line in reader.lines() {
-        let mut mass = parse_line(line.unwrap());
-        loop {
-            let fuel = calc_fuel(mass);
-            if fuel <= 0 {
-                break;
-            }
-            println!("Calculated fuel requirement: {} for mass: {}", fuel, mass);
-            total = total.add(fuel);
-            mass = fuel;
-        }
+        let mass = parse_line(line.unwrap());
+        process_mass(&mut total, mass)
     }
     println!("\nTotal fuel required: {}", total);
+}
+
+fn process_mass(total: &mut i32, mut mass: i32) -> () {
+    loop {
+        let fuel = calc_fuel(mass);
+        if fuel <= 0 {
+            break;
+        }
+        println!("Calculated fuel requirement: {} for mass: {}", fuel, mass);
+        *total = total.add(fuel);
+        mass = fuel;
+    }
 }
 
 fn parse_line(line: String) -> i32 {
