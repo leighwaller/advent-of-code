@@ -1,0 +1,10 @@
+* text=auto
+
+# All known text filetypes
+*.md text
+*.proto text
+*.rs text
+*.sh text
+*.toml text
+*.txt text
+*.yml text
