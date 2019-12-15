@@ -4,7 +4,7 @@ use math::round;
 use std::ops::Add;
 
 fn main() {
-    let reader = read_file("data/modules-mass.txt");
+    let reader = read_file("data/input.txt");
     let mut total = 0;
     for line in reader.lines() {
         let mass = parse_line(line.unwrap());
