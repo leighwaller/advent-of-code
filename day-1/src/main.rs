@@ -20,7 +20,7 @@ fn process_mass(total: &mut i32, mut mass: i32) -> () {
             break;
         }
         println!("Calculated fuel requirement: {} for mass: {}", fuel, mass);
-        *total = total.add(fuel);
+        *total = *total + fuel;
         mass = fuel;
     }
 }
