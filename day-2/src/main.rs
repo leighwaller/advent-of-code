@@ -1,69 +1,41 @@
 use std::fs::File;
-use std::io::{BufRead, BufReader};
-use std::ops::{Add, Mul};
-use std::process::exit;
+use std::io::{Read};
 
-const OP_CODE_ADD: i32 = 1;
-const OP_CODE_MULTIPLY: i32 = 2;
-const OP_CODE_EXIT: i32 = 99;
+const OP_CODE_ADD: usize = 1;
+const OP_CODE_MULTIPLY: usize = 2;
+const OP_CODE_EXIT: usize = 99;
 
 fn main() {
-    let file = read_file("data/input.csv");
-    let mut data = parse_data(file);
+    let mut data = read_input("data/input.csv");
     let mut pos = 0;
     loop {
         println!("processing op: {} at pos: {}", data[pos], pos);
+        let x = data[pos + 1] as usize;
+        let y = data[pos + 2] as usize;
+        let z = data[pos + 3] as usize;
+
         match data[pos] {
             OP_CODE_ADD => {
-                let x = get_x(&data, pos);
-                let y = get_y(&data, pos);
-                let zidx = pos + 3;
-                let z = x.add(y);
-                println!("Setting value at position: {} to {}", zidx, z);
-                data[zidx] = z;
+                data[z] = x + y;
             }
             OP_CODE_MULTIPLY => {
-                let x = get_x(&data, pos);
-                let y = get_y(&data, pos);
-                let zidx = pos + 3;
-                let z = x.mul(y);
-                println!("Setting value at position: {} to {}", zidx, z);
-                data[zidx] = z;
+                data[z] = x * y;
             }
             OP_CODE_EXIT => break,
             _ => println!("Unknown op code: {}", data[pos])
         }
-        pos = pos + 4;
+        pos += 4;
     }
     println!("Value at 0: {}", data[0]);
 }
 
-fn get_x(data: &Vec<i32>, pos: usize) -> i32 {
-    data[pos + 1]
-}
-
-fn get_y(data: &Vec<i32>, pos: usize) -> i32 {
-    data[pos + 2]
-}
-
-fn parse_data(file: BufReader<File>) -> Vec<i32> {
-    let mut vals: Vec<i32> = vec![];
-    // should really only be one row in this case
-    for result in file.lines() {
-        let line = result.unwrap();
-        let fields: Vec<&str> = line.split_terminator(",").collect();
-        parse_fields(&mut vals, fields)
-    }
-    return vals;
-}
-
-fn parse_fields(vals: &mut Vec<i32>, fields: Vec<&str>) -> () {
-    for field in fields {
-        vals.push(field.parse().unwrap());
-    }
-}
-
-fn read_file(path: &str) -> BufReader<File> {
-    let file = File::open(path).unwrap();
-    return BufReader::new(file);
+fn read_input(path: &str) -> Vec<usize> {
+    // assumes only one line of input
+    let mut line = String::new();
+    File::open(path).unwrap().read_to_string(&mut line);
+    return line.trim()
+        .split(",")
+        .map(str::parse::<usize>)
+        .map(Result::unwrap)
+        .collect::<Vec<usize>>();
 }
