@@ -19,7 +19,6 @@ fn shortest_distance(path1: &str, path2: &str) -> i16 {
     let points = map_points(path1);
     let points2 = map_points(path2);
     let intersections = find_intersections(points, points2);
-    println!("Found intersecting points: {:#?}", intersections);
     return compute_shortest_manhattan(&intersections);
 }
 
@@ -54,7 +53,7 @@ fn map_points(path: &str) -> HashSet<Point> {
     for input in parse_line(path) {
         let (direction, distance) = input.split_at(1);
         let command = Command::new(direction, distance);
-        for i in 0..command.distance {
+        for _ in 0..command.distance {
             match command.direction {
                 Direction::Left => x -= 1,
                 Direction::Right => x += 1,
